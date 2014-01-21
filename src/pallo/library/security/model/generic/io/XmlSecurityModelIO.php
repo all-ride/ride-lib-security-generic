@@ -378,7 +378,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
             $roleElement->setAttribute(self::ATTRIBUTE_ID, $role->getId());
             $roleElement->setAttribute(self::ATTRIBUTE_NAME, $role->getName());
 
-            $paths = $role->getRolePaths();
+            $paths = $role->getPaths();
             foreach ($paths as $path) {
                 $pathElement = $dom->createElement(self::TAG_PATH, $path);
 
@@ -386,7 +386,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
                 $roleElement->appendChild($importedPathElement);
             }
 
-            $permissions = $role->getRolePermissions();
+            $permissions = $role->getPermissions();
             foreach ($permissions as $permission) {
                 $permissionElement = $dom->createElement(self::TAG_PERMISSION, $permission->getCode());
 
