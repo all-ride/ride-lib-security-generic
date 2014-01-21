@@ -294,7 +294,7 @@ class GenericUser implements User {
         $this->permissions = array();
 
         foreach ($this->roles as $role) {
-            $permissions = $role->getRolePermissions();
+            $permissions = $role->getPermissions();
 
             foreach ($permissions as $permission) {
                 $this->permissions[$permission->code] = true;
@@ -329,7 +329,7 @@ class GenericUser implements User {
         $this->paths = array();
 
         foreach ($this->roles as $role) {
-            $paths = $role->getRolePaths();
+            $paths = $role->getPaths();
 
             foreach ($paths as $path) {
                 $this->paths[$path] = true;

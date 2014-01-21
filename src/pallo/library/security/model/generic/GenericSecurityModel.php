@@ -201,7 +201,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
             $username = $user->getUserName();
 
             if (!$query || stripos($username, $query) !== false) {
-                $users[$user->getUserId()] = $username;
+                $users[$user->getId()] = $username;
             }
         }
 
