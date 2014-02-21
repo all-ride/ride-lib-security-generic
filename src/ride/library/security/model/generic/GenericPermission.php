@@ -1,8 +1,8 @@
 <?php
 
-namespace pallo\library\security\model\generic;
+namespace ride\library\security\model\generic;
 
-use pallo\library\security\model\Permission;
+use ride\library\security\model\Permission;
 
 /**
  * Permission of the SecurityModel

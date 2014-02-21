@@ -1,15 +1,15 @@
 <?php
 
-namespace pallo\library\security\model\generic;
+namespace ride\library\security\model\generic;
 
-use pallo\library\encryption\hash\Hash;
-use pallo\library\event\EventManager;
-use pallo\library\security\model\generic\io\SecurityModelIO;
-use pallo\library\security\model\Permission;
-use pallo\library\security\model\Role;
-use pallo\library\security\model\ChainableSecurityModel;
-use pallo\library\security\model\User;
-use pallo\library\security\SecurityManager;
+use ride\library\encryption\hash\Hash;
+use ride\library\event\EventManager;
+use ride\library\security\model\generic\io\SecurityModelIO;
+use ride\library\security\model\Permission;
+use ride\library\security\model\Role;
+use ride\library\security\model\ChainableSecurityModel;
+use ride\library\security\model\User;
+use ride\library\security\SecurityManager;
 
 /**
  * Model of the security data
@@ -18,19 +18,19 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Instance of the event manager
-     * @var pallo\library\event\EventManager
+     * @var ride\library\event\EventManager
      */
     private $eventManager;
 
     /**
      * Instance of the hash algorithm
-     * @var pallo\library\encryption\hash\Hash
+     * @var ride\library\encryption\hash\Hash
      */
     private $hashAlgorithm;
 
     /**
      * The input/output implementation for this model
-     * @var pallo\security\generic\io\SecurityModelIO
+     * @var ride\security\generic\io\SecurityModelIO
      */
     private $io;
 
@@ -60,9 +60,9 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Constructs a new security model
-     * @param pallo\security\xml\io\SecurityModelIO $io
-     * @param pallo\library\event\EventManager $eventManager
-     * @param pallo\library\encryption\hash\Hash $hashAlgorithm
+     * @param ride\security\xml\io\SecurityModelIO $io
+     * @param ride\library\event\EventManager $eventManager
+     * @param ride\library\encryption\hash\Hash $hashAlgorithm
      * @return null
      */
     public function __construct(SecurityModelIO $io, EventManager $eventManager, Hash $hashAlgorithm) {
@@ -139,7 +139,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Creates a new user
-     * @return pallo\library\security\model\User
+     * @return ride\library\security\model\User
      */
     public function createUser() {
         return new GenericUser();
@@ -148,7 +148,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a user by it's username
      * @param string $username Username of the user
-     * @return pallo\library\security\model\User|null User object if found, null
+     * @return ride\library\security\model\User|null User object if found, null
      * otherwise
      */
     public function getUserByUsername($username) {
@@ -168,7 +168,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a user by it's email address
      * @param string $email Email address of the user
-     * @return pallo\library\security\model\User|null User object if found, null
+     * @return ride\library\security\model\User|null User object if found, null
      * otherwise
      */
     public function getUserByEmail($email) {
@@ -234,7 +234,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves a user
-     * @param pallo\library\security\model\User $user The user to save
+     * @param ride\library\security\model\User $user The user to save
      * @return null
      */
     public function saveUser(User $user) {
@@ -261,7 +261,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves the provided roles for the provided user
-     * @param pallo\library\security\model\User $user The user to update
+     * @param ride\library\security\model\User $user The user to update
      * @param array $roles The roles to set to the user
      * @return null
      */
@@ -277,7 +277,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Deletes the provided user
-     * @param pallo\library\security\model\User $user The user to delete
+     * @param ride\library\security\model\User $user The user to delete
      * @return null
      */
     public function deleteUser(User $user) {
@@ -298,7 +298,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Creates a new role
-     * @return pallo\library\security\model\Role
+     * @return ride\library\security\model\Role
      */
     public function createRole() {
         return new GenericRole();
@@ -307,7 +307,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a role by it's name
      * @param string $name Name of the role
-     * @return pallo\library\security\model\Role|null The role if found or null
+     * @return ride\library\security\model\Role|null The role if found or null
      * otherwise
      */
     public function getRoleByName($name) {
@@ -349,7 +349,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves a role
-     * @param pallo\library\security\model\Role $role Role to save
+     * @param ride\library\security\model\Role $role Role to save
      * @return null
      */
     public function saveRole(Role $role) {
@@ -391,7 +391,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Sets the allowed paths to a role
-     * @param pallo\library\security\model\Role $role Role to set the routes to
+     * @param ride\library\security\model\Role $role Role to set the routes to
      * @param array $paths Array with a path regular expression per element
      * @return null
      */
@@ -409,7 +409,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Deletes the provided role
-     * @param pallo\library\security\model\Role $role Role to delete
+     * @param ride\library\security\model\Role $role Role to delete
      * @return null
      */
     public function deleteRole(Role $role) {

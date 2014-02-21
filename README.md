@@ -1,3 +1,3 @@
-# Pallo: Generic Security Model
+# Ride: Generic Security Model
 
-Generic security model for the security library of the PHP Pallo framework.
+Generic security model for the security library of the PHP Ride framework.

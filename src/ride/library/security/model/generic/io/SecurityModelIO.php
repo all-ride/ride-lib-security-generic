@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\library\security\model\generic\io;
+namespace ride\library\security\model\generic\io;
 
 interface SecurityModelIO {
 
