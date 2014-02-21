@@ -1,9 +1,9 @@
 <?php
 
-namespace pallo\library\security\model\generic;
+namespace ride\library\security\model\generic;
 
-use pallo\library\security\matcher\PathMatcher;
-use pallo\library\security\model\User;
+use ride\library\security\matcher\PathMatcher;
+use ride\library\security\model\User;
 
 /**
  * User of the SecurityModel
@@ -305,7 +305,7 @@ class GenericUser implements User {
     /**
      * Checks whether a path is allowed for this user
      * @param string $path Path to check
-     * @param pallo\library\security\matcher\PathMatcher $pathMatcher To match
+     * @param ride\library\security\matcher\PathMatcher $pathMatcher To match
      * path regular expression on the route
      * @return boolean True if the path is allowed, false otherwise
      */

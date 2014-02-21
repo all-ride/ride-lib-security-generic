@@ -1,6 +1,6 @@
 {
-    "name": "pallo/lib-security-generic",
-    "description": "Generic security model of the Pallo framework",
+    "name": "ride/lib-security-generic",
+    "description": "Generic security model of the Ride framework",
     "license": "MIT",
     "version": "0.1.1",
     "authors": [
@@ -10,15 +10,15 @@
         }
     ],
     "require": {
-        "pallo/lib-encryption": ">=0.1.0",
-        "pallo/lib-event": ">=0.3.2",
-        "pallo/lib-reflection": ">=0.4.0",
-        "pallo/lib-security": ">=0.1.1",
-        "pallo/lib-system": ">=0.3.1"
+        "ride/lib-encryption": ">=0.1.0",
+        "ride/lib-event": ">=0.3.2",
+        "ride/lib-reflection": ">=0.4.0",
+        "ride/lib-security": ">=0.1.1",
+        "ride/lib-system": ">=0.3.1"
     },    
     "autoload": {
         "psr-0": {
-            "pallo\\library\\security\\model\\generic\\": ["src/", "test/src/"]
+            "ride\\library\\security\\model\\generic\\": ["src/", "test/src/"]
         }
     }
 }

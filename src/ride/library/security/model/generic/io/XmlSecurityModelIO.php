@@ -1,14 +1,14 @@
 <?php
 
-namespace pallo\library\security\model\generic\io;
+namespace ride\library\security\model\generic\io;
 
-use pallo\library\reflection\Boolean;
-use pallo\library\system\file\File;
+use ride\library\reflection\Boolean;
+use ride\library\system\file\File;
 
-use pallo\library\security\model\generic\GenericPermission;
-use pallo\library\security\model\generic\GenericRole;
-use pallo\library\security\model\generic\GenericRoute;
-use pallo\library\security\model\generic\GenericUser;
+use ride\library\security\model\generic\GenericPermission;
+use ride\library\security\model\generic\GenericRole;
+use ride\library\security\model\generic\GenericRoute;
+use ride\library\security\model\generic\GenericUser;
 
 use \DOMDocument;
 use \DOMElement;

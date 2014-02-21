@@ -1,9 +1,9 @@
 <?php
 
-namespace pallo\library\security\model\generic;
+namespace ride\library\security\model\generic;
 
-use pallo\library\security\exception\SecurityException;
-use pallo\library\security\model\Role;
+use ride\library\security\exception\SecurityException;
+use ride\library\security\model\Role;
 
 /**
  * Role of the SecurityModel
