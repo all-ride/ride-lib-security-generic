@@ -18,19 +18,19 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Instance of the event manager
-     * @var ride\library\event\EventManager
+     * @var \ride\library\event\EventManager
      */
     private $eventManager;
 
     /**
      * Instance of the hash algorithm
-     * @var ride\library\encryption\hash\Hash
+     * @var \ride\library\encryption\hash\Hash
      */
     private $hashAlgorithm;
 
     /**
      * The input/output implementation for this model
-     * @var ride\security\generic\io\SecurityModelIO
+     * @var \ride\library\security\model\generic\io\SecurityModelIO
      */
     private $io;
 
@@ -60,9 +60,9 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Constructs a new security model
-     * @param ride\security\xml\io\SecurityModelIO $io
-     * @param ride\library\event\EventManager $eventManager
-     * @param ride\library\encryption\hash\Hash $hashAlgorithm
+     * @param \ride\library\security\model\generic\io\SecurityModelIO $io
+     * @param \ride\library\event\EventManager $eventManager
+     * @param \ride\library\encryption\hash\Hash $hashAlgorithm
      * @return null
      */
     public function __construct(SecurityModelIO $io, EventManager $eventManager, Hash $hashAlgorithm) {
@@ -139,7 +139,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Creates a new user
-     * @return ride\library\security\model\User
+     * @return \ride\library\security\model\User
      */
     public function createUser() {
         return new GenericUser();
@@ -148,7 +148,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a user by it's username
      * @param string $username Username of the user
-     * @return ride\library\security\model\User|null User object if found, null
+     * @return \ride\library\security\model\User|null User object if found, null
      * otherwise
      */
     public function getUserByUsername($username) {
@@ -168,7 +168,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a user by it's email address
      * @param string $email Email address of the user
-     * @return ride\library\security\model\User|null User object if found, null
+     * @return \ride\library\security\model\User|null User object if found, null
      * otherwise
      */
     public function getUserByEmail($email) {
@@ -234,7 +234,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves a user
-     * @param ride\library\security\model\User $user The user to save
+     * @param \ride\library\security\model\User $user The user to save
      * @return null
      */
     public function saveUser(User $user) {
@@ -261,7 +261,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves the provided roles for the provided user
-     * @param ride\library\security\model\User $user The user to update
+     * @param \ride\library\security\model\User $user The user to update
      * @param array $roles The roles to set to the user
      * @return null
      */
@@ -277,7 +277,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Deletes the provided user
-     * @param ride\library\security\model\User $user The user to delete
+     * @param \ride\library\security\model\User $user The user to delete
      * @return null
      */
     public function deleteUser(User $user) {
@@ -298,7 +298,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Creates a new role
-     * @return ride\library\security\model\Role
+     * @return \ride\library\security\model\Role
      */
     public function createRole() {
         return new GenericRole();
@@ -307,7 +307,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
     /**
      * Gets a role by it's name
      * @param string $name Name of the role
-     * @return ride\library\security\model\Role|null The role if found or null
+     * @return \ride\library\security\model\Role|null The role if found or null
      * otherwise
      */
     public function getRoleByName($name) {
@@ -349,7 +349,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Saves a role
-     * @param ride\library\security\model\Role $role Role to save
+     * @param \ride\library\security\model\Role $role Role to save
      * @return null
      */
     public function saveRole(Role $role) {
@@ -391,7 +391,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Sets the allowed paths to a role
-     * @param ride\library\security\model\Role $role Role to set the routes to
+     * @param \ride\library\security\model\Role $role Role to set the routes to
      * @param array $paths Array with a path regular expression per element
      * @return null
      */
@@ -409,7 +409,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Deletes the provided role
-     * @param ride\library\security\model\Role $role Role to delete
+     * @param \ride\library\security\model\Role $role Role to delete
      * @return null
      */
     public function deleteRole(Role $role) {
