@@ -325,6 +325,18 @@ class GenericSecurityModel implements ChainableSecurityModel {
     }
 
     /**
+     * Gets all the roles
+     * @return array
+     */
+    public function getRoles() {
+        if (!isset($this->roles)) {
+            $this->roles = $this->io->getRoles();
+        }
+
+        return $this->roles;
+    }
+
+    /**
      * Find the roles which match the provided part of a name
      * @param string $query Part of a name to match
      * @return array Array with the role name which match the provided query
