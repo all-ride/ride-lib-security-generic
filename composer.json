@@ -2,7 +2,7 @@
     "name": "ride/lib-security-generic",
     "description": "Generic security model of the Ride framework",
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "authors": [
         {
             "name": "Joris Vandeweerd",
