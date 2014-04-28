@@ -13,9 +13,9 @@
         "ride/lib-encryption": ">=0.1.0",
         "ride/lib-event": ">=0.3.2",
         "ride/lib-reflection": ">=0.4.0",
-        "ride/lib-security": ">=0.2.0",
+        "ride/lib-security": ">=0.3.1",
         "ride/lib-system": ">=0.3.1"
-    },    
+    },
     "autoload": {
         "psr-0": {
             "ride\\library\\security\\model\\generic\\": ["src/", "test/src/"]
