@@ -2,7 +2,7 @@
     "name": "ride/lib-security-generic",
     "description": "Generic security model of the Ride framework",
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "authors": [
         {
             "name": "Joris Vandeweerd",
@@ -13,9 +13,9 @@
         "ride/lib-encryption": ">=0.1.0",
         "ride/lib-event": ">=0.3.2",
         "ride/lib-reflection": ">=0.4.0",
-        "ride/lib-security": ">=0.2.0",
+        "ride/lib-security": ">=0.3.1",
         "ride/lib-system": ">=0.3.1"
-    },    
+    },
     "autoload": {
         "psr-0": {
             "ride\\library\\security\\model\\generic\\": ["src/", "test/src/"]

@@ -4,6 +4,8 @@ namespace ride\library\security\model\generic;
 
 use ride\library\encryption\hash\Hash;
 use ride\library\event\EventManager;
+use ride\library\security\exception\EmailExistsException;
+use ride\library\security\exception\UsernameExistsException;
 use ride\library\security\model\generic\io\SecurityModelIO;
 use ride\library\security\model\Permission;
 use ride\library\security\model\Role;
@@ -138,11 +140,83 @@ class GenericSecurityModel implements ChainableSecurityModel {
     }
 
     /**
-     * Creates a new user
-     * @return \ride\library\security\model\User
+     * Sets the allowed paths to a role
+     * @param \ride\library\security\model\Role $role Role to set the routes to
+     * @param array $paths Array with a path regular expression per element
+     * @return null
      */
-    public function createUser() {
-        return new GenericUser();
+    public function setAllowedPathsToRole(Role $role, array $paths) {
+        if ($this->roles === null) {
+            $this->roles  = $this->io->getRoles();
+        }
+
+        $roleId = $role->getId();
+
+        $this->roles[$roleId]->setPaths($paths);
+
+        $this->roles = $this->io->setRoles($this->roles);
+    }
+
+    /**
+     * Sets the granted permissions to a role
+     * @param Role $role Role to set the permissions to
+     * @param array $permissionCodes Array with a permission code per element
+     * @return null
+     */
+    public function setGrantedPermissionsToRole(Role $role, array $permissionCodes) {
+        if ($this->roles === null) {
+            $this->roles  = $this->io->getRoles();
+        }
+
+        $permissions = array();
+
+        $this->getPermissions();
+        foreach ($this->permissions as $permission) {
+            if (in_array($permission->getCode(), $permissionCodes)) {
+                $permissions[] = $permission;
+            }
+        }
+
+        $roleId = $role->getId();
+
+        $this->roles[$roleId]->setPermissions($permissions);
+
+        $this->roles = $this->io->setRoles($this->roles);
+    }
+
+    /**
+     * Saves the provided roles for the provided user
+     * @param \ride\library\security\model\User $user The user to update
+     * @param array $roles The roles to set to the user
+     * @return null
+     */
+    public function setRolesToUser(User $user, array $roles) {
+        if ($this->users === null) {
+            $this->users = $this->io->getUsers();
+        }
+
+        $this->users[$user->getId()]->setRoles($roles);
+
+        $this->users = $this->io->setUsers($this->users);
+    }
+
+    /**
+     * Gets a user by it's id
+     * @param string $id Id of the user
+     * @return User|null User object if found, null otherwise
+     */
+    public function getUserById($id) {
+        if ($this->users === null) {
+            $this->users = $this->io->getUsers();
+        }
+
+        foreach ($this->users as $user) {
+            if (strtoupper($user->getId()) == $id) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -186,50 +260,90 @@ class GenericSecurityModel implements ChainableSecurityModel {
     }
 
     /**
-     * Find the users which match the provided part of a username
-     * @param string $query Part of a username to match
-     * @return array Array with the usernames which match the provided query
+     * Gets the users
+     * @param array $options Extra options for the query
+     * <ul>
+     *     <li>query</li>
+     *     <li>name</li>
+     *     <li>username</li>
+     *     <li>email</li>
+     *     <li>page</li>
+     *     <li>limit</li>
+     * </ul>
+     * @return array
      */
-    public function findUsersByUsername($query) {
+    public function getUsers(array $options = null) {
         if ($this->users === null) {
             $this->users = $this->io->getUsers();
         }
 
+        if (!$options) {
+            return $this->users;
+        }
+
         $users = array();
+
+        $query = isset($options['query']) ? $options['query'] : null;
+        $queryName = isset($options['name']) ? $options['name'] : null;
+        $queryUsername = isset($options['username']) ? $options['username'] : null;
+        $queryEmail = isset($options['email']) ? $options['email'] : null;
 
         foreach ($this->users as $user) {
             $username = $user->getUserName();
+            $name = $user->getDisplayName();
+            $email = $user->getEmail();
 
-            if (!$query || stripos($username, $query) !== false) {
-                $users[$user->getId()] = $username;
+            if ($query && stripos($username, $query) === false && stripos($name, $query) === false && stripos($email, $query) === false) {
+                continue;
             }
+            if ($queryName && stripos($name, $queryName) === false) {
+                continue;
+            }
+            if ($queryUsername && stripos($username, $queryUsername) === false) {
+                continue;
+            }
+            if ($queryEmail && stripos($email, $queryEmail) === false) {
+                continue;
+            }
+
+            $users[$user->getId()] = $user;
+        }
+
+        if (isset($options['limit'])) {
+            $page = isset($options['page']) ? $options['page'] : 1;
+            $offset = ($page - 1) * $options['limit'];
+
+            $users = array_slice($users, $offset, $options['limit'], true);
         }
 
         return $users;
     }
 
     /**
-     * Find the users which match the provided part of a email address
-     * @param string $query Part of a email address
-     * @return array Array with the usernames of the users which match the provided query
+     * Counts the users
+     * @param array $options Extra options for the query
+     * <ul>
+     *     <li>query</li>
+     *     <li>name</li>
+     *     <li>username</li>
+     *     <li>email</li>
+     * </ul>
+     * @return integer
      */
-    public function findUsersByEmail($query) {
-        if ($this->users === null) {
-            $this->users = $this->io->getUsers();
+    public function countUsers(array $options = null) {
+        if (isset($options['limit'])) {
+            unset($options['limit']);
         }
 
-        $users = array();
+        return count($this->getUsers($options));
+    }
 
-        foreach ($this->users as $user) {
-            $username = $user->getUserName();
-            $email = $user->getEmail();
-
-            if (!$query || stripos($email, $query) !== false) {
-                $users[$user->getUserId()] = $username;
-            }
-        }
-
-        return $users;
+    /**
+     * Creates a new user
+     * @return \ride\library\security\model\User
+     */
+    public function createUser() {
+        return new GenericUser();
     }
 
     /**
@@ -238,39 +352,32 @@ class GenericSecurityModel implements ChainableSecurityModel {
      * @return null
      */
     public function saveUser(User $user) {
+        if ($this->users === null) {
+            $this->users = $this->io->getUsers();
+        }
+
+        $id = $user->getId();
+        $username = $user->getUserName();
+        $email = $user->getEmail();
+        foreach ($this->users as $modelUser) {
+            if ($modelUser->getUserName() == $username && $modelUser->getId() != $id) {
+                throw new UsernameExistsException();
+            }
+
+            if ($email && $modelUser->getEmail() == $email && $modelUser->getId() != $id) {
+                throw new EmailExistsException();
+            }
+        }
+
         if ($user->isPasswordChanged()) {
             $password = $user->getPassword();
 
             $this->eventManager->triggerEvent(SecurityManager::EVENT_PASSWORD_UPDATE, array('user' => $user, 'password' => $password));
 
-            if ($this->hashAlgorithm) {
-                $user->setPassword($this->hashAlgorithm->hash($password));
-            } else {
-                $user->setPassword($password);
-            }
-        }
-
-        if ($this->users === null) {
-            $this->users = $this->io->getUsers();
+            $user->setPassword($this->hashAlgorithm->hash($password));
         }
 
         $this->users[$user->getId()] = $user;
-
-        $this->users = $this->io->setUsers($this->users);
-    }
-
-    /**
-     * Saves the provided roles for the provided user
-     * @param \ride\library\security\model\User $user The user to update
-     * @param array $roles The roles to set to the user
-     * @return null
-     */
-    public function setRolesToUser(User $user, array $roles) {
-        if ($this->users === null) {
-            $this->users = $this->io->getUsers();
-        }
-
-        $this->users[$user->getId()]->setRoles($roles);
 
         $this->users = $this->io->setUsers($this->users);
     }
@@ -297,11 +404,20 @@ class GenericSecurityModel implements ChainableSecurityModel {
     }
 
     /**
-     * Creates a new role
-     * @return \ride\library\security\model\Role
+     * Gets a role by it's id
+     * @param string $id Id of the role
+     * @return Role|null Role object if found, null otherwise
      */
-    public function createRole() {
-        return new GenericRole();
+    public function getRoleById($id) {
+        if (!isset($this->roles)) {
+            $this->roles = $this->io->getRoles();
+        }
+
+        if (!isset($this->roles[$id])) {
+            return null;
+        }
+
+        return $this->roles[$id];
     }
 
     /**
@@ -326,37 +442,71 @@ class GenericSecurityModel implements ChainableSecurityModel {
 
     /**
      * Gets all the roles
+     * @param array $options Options for the query
+     * <ul>
+     *     <li>query</li>
+     *     <li>name</li>
+     *     <li>page</li>
+     *     <li>limit</li>
+     * </ul>
      * @return array
      */
-    public function getRoles() {
+    public function getRoles(array $options = null) {
         if (!isset($this->roles)) {
-            $this->roles = $this->io->getRoles();
-        }
-
-        return $this->roles;
-    }
-
-    /**
-     * Find the roles which match the provided part of a name
-     * @param string $query Part of a name to match
-     * @return array Array with the role name which match the provided query
-     */
-    public function findRolesByName($query) {
-        if ($this->roles === null) {
             $this->roles = $this->io->getRoles();
         }
 
         $roles = array();
 
+        $query = isset($options['query']) ? $options['query'] : null;
+        $queryName = isset($options['name']) ? $options['name'] : null;
+
         foreach ($this->roles as $role) {
             $name = $role->getName();
 
-            if (!$query || stripos($name, $query) !== false) {
-                $roles[$role->getId()] = $role;
+            if ($query && stripos($name, $query) === false) {
+                continue;
             }
+            if ($queryName && stripos($name, $queryName) === false) {
+                continue;
+            }
+
+            $roles[$role->getId()] = $role;
+        }
+
+        if (isset($options['limit'])) {
+            $page = isset($options['page']) ? $options['page'] : 1;
+            $offset = ($page - 1) * $options['limit'];
+
+            $roles = array_slice($roles, $offset, $options['limit'], true);
         }
 
         return $roles;
+    }
+
+    /**
+     * Counts the roles
+     * @param array $options Extra options for the query
+     * <ul>
+     *     <li>query</li>
+     *     <li>name</li>
+     * </ul>
+     * @return integer
+     */
+    public function countRoles(array $options = null) {
+        if (isset($options['limit'])) {
+            unset($options['limit']);
+        }
+
+        return count($this->getRoles($options));
+    }
+
+    /**
+     * Creates a new role
+     * @return \ride\library\security\model\Role
+     */
+    public function createRole() {
+        return new GenericRole();
     }
 
     /**
@@ -370,51 +520,6 @@ class GenericSecurityModel implements ChainableSecurityModel {
         }
 
         $this->roles[$role->getId()] = $role;
-
-        $this->roles = $this->io->setRoles($this->roles);
-    }
-
-    /**
-     * Sets the granted permissions to a role
-     * @param Role $role Role to set the permissions to
-     * @param array $permissionCodes Array with a permission code per element
-     * @return null
-     */
-    public function setGrantedPermissionsToRole(Role $role, array $permissionCodes) {
-        if ($this->roles === null) {
-            $this->roles  = $this->io->getRoles();
-        }
-
-        $permissions = array();
-
-        $this->getPermissions();
-        foreach ($this->permissions as $permission) {
-            if (in_array($permission->getCode(), $permissionCodes)) {
-                $permissions[] = $permission;
-            }
-        }
-
-        $roleId = $role->getId();
-
-        $this->roles[$roleId]->setPermissions($permissions);
-
-        $this->roles = $this->io->setRoles($this->roles);
-    }
-
-    /**
-     * Sets the allowed paths to a role
-     * @param \ride\library\security\model\Role $role Role to set the routes to
-     * @param array $paths Array with a path regular expression per element
-     * @return null
-     */
-    public function setAllowedPathsToRole(Role $role, array $paths) {
-        if ($this->roles === null) {
-            $this->roles  = $this->io->getRoles();
-        }
-
-        $roleId = $role->getId();
-
-        $this->roles[$roleId]->setPaths($paths);
 
         $this->roles = $this->io->setRoles($this->roles);
     }
@@ -470,7 +575,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
      * @param string $code Code of the permission
      * @return null
      */
-    public function registerPermission($code) {
+    public function addPermission($code) {
         if ($this->permissions === null) {
             $this->permissions = $this->io->getPermissions();
         }
@@ -485,7 +590,7 @@ class GenericSecurityModel implements ChainableSecurityModel {
      * @param string $code Code of the permission
      * @return null
      */
-    public function unregisterPermission($code) {
+    public function deletePermission($code) {
         if ($this->permissions === null) {
             $this->permissions = $this->io->getPermissions();
         }
