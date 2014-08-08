@@ -39,9 +39,13 @@ class XmlSecurityModelIO implements SecurityModelIO {
 
     const ATTRIBUTE_IMAGE = 'image';
 
+    const ATTRIBUTE_CONFIRMED = 'confirmed';
+
     const ATTRIBUTE_ACTIVE = 'active';
 
     const ATTRIBUTE_SUPER = 'super';
+
+    const ATTRIBUTE_WEIGHT = 'weight';
 
     const ATTRIBUTE_CODE = 'code';
 
@@ -234,11 +238,16 @@ class XmlSecurityModelIO implements SecurityModelIO {
         $displayName = $element->getAttribute(self::ATTRIBUTE_NAME);
         $password = $element->getAttribute(self::ATTRIBUTE_PASSWORD);
         $email = $element->getAttribute(self::ATTRIBUTE_EMAIL);
+        $isEmailConfirmed = $element->getAttribute(self::ATTRIBUTE_CONFIRMED);
         $image = $element->getAttribute(self::ATTRIBUTE_IMAGE);
         $isActive = $element->getAttribute(self::ATTRIBUTE_ACTIVE);
         $isSuperUser = $element->getAttribute(self::ATTRIBUTE_SUPER);
         $roles = array();
         $preferences = array();
+
+        if ($isEmailConfirmed != '') {
+            $isEmailConfirmed = Boolean::getBoolean($isEmailConfirmed);
+        }
 
         if ($isActive != '') {
             $isActive = Boolean::getBoolean($isActive);
@@ -263,10 +272,12 @@ class XmlSecurityModelIO implements SecurityModelIO {
         }
         if ($email) {
             $user->setEmail($email);
+            $user->setIsEmailConfirmed($isEmailConfirmed);
         }
         if ($image) {
             $user->setImage($image);
         }
+
         $user->setIsActive($isActive);
         $user->setIsSuperUser($isSuperUser);
         $user->setRoles($roles);
@@ -285,6 +296,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
     protected function readRole(DOMElement $element) {
         $id = $element->getAttribute(self::ATTRIBUTE_ID);
         $name = $element->getAttribute(self::ATTRIBUTE_NAME);
+        $weight = $element->getAttribute(self::ATTRIBUTE_WEIGHT);
         $paths = array();
         $permissions = array();
 
@@ -296,9 +308,14 @@ class XmlSecurityModelIO implements SecurityModelIO {
             }
         }
 
+        if ($weight === '') {
+            $weight = 0;
+        }
+
         $role = new GenericRole();
         $role->setId($id);
         $role->setName($name);
+        $role->setWeight($weight);
         $role->setPaths($paths);
         $role->setPermissions($permissions);
 
@@ -333,6 +350,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
             $email = $user->getEmail();
             $displayName = $user->getDisplayName();
             $image = $user->getImage();
+            $isEmailConfirmed = $user->isEmailConfirmed();
             $isActive = $user->isActive();
             $isSuperUser = $user->isSuperUser();
 
@@ -343,6 +361,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
             }
             if ($email) {
                 $userElement->setAttribute(self::ATTRIBUTE_EMAIL, $email);
+                $userElement->setAttribute(self::ATTRIBUTE_CONFIRMED, $isEmailConfirmed ? '1' : '0');
             }
             $userElement->setAttribute(self::ATTRIBUTE_USERNAME, $user->getUserName());
             $userElement->setAttribute(self::ATTRIBUTE_PASSWORD, $user->getPassword());
@@ -377,6 +396,7 @@ class XmlSecurityModelIO implements SecurityModelIO {
             $roleElement = $dom->createElement(self::TAG_ROLE);
             $roleElement->setAttribute(self::ATTRIBUTE_ID, $role->getId());
             $roleElement->setAttribute(self::ATTRIBUTE_NAME, $role->getName());
+            $roleElement->setAttribute(self::ATTRIBUTE_WEIGHT, $role->getWeight());
 
             $paths = $role->getPaths();
             foreach ($paths as $path) {
