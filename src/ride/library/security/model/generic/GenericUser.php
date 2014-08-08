@@ -47,6 +47,12 @@ class GenericUser implements User {
     protected $image;
 
     /**
+     * Flag to see if the user's email address has been confirmed
+     * @var boolean
+     */
+    protected $isEmailConfirmed;
+
+    /**
      * Flag to see if the user is active
      * @var boolean
      */
@@ -86,6 +92,7 @@ class GenericUser implements User {
         $this->password = $password;
         $this->displayName = null;
         $this->email = null;
+        $this->isEmailConfirmed = false;
         $this->isActive = false;
         $this->isSuperUser = false;
         $this->roles = array();
@@ -191,6 +198,8 @@ class GenericUser implements User {
      */
     public function setEmail($email) {
         $this->email = $email;
+
+        $this->setIsEmailConfirmed(false);
     }
 
     /**
@@ -199,6 +208,27 @@ class GenericUser implements User {
      */
     public function getEmail() {
         return $this->email;
+    }
+
+    /**
+     * Sets whether this user's email address has been confirmed
+     * @param boolean $flag
+     * @return null
+     */
+    public function setIsEmailConfirmed($flag) {
+        if (!$this->email) {
+            $this->isEmailConfirmed = false;
+        } else {
+            $this->isEmailConfirmed = $flag;
+        }
+    }
+
+    /**
+     * Gets whether this user's email address has been confirmed
+     * @return boolean
+     */
+    public function isEmailConfirmed() {
+        return $this->isEmailConfirmed;
     }
 
     /**
@@ -267,6 +297,27 @@ class GenericUser implements User {
      */
     public function getRoles() {
         return $this->roles;
+    }
+
+    /**
+     * Gets the highest weight of the user's roles
+     * @return integer
+     */
+    public function getRoleWeight() {
+        if ($this->isSuperUser) {
+            return 2147483647;
+        }
+
+        $weight = 0;
+
+        foreach ($this->roles as $role) {
+            $roleWeight = $role->getWeight();
+            if ($roleWeight > $weight) {
+                $weight = $roleWeight;
+            }
+        }
+
+        return $weight;
     }
 
     /**

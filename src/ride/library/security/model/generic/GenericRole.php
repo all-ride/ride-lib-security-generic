@@ -11,25 +11,31 @@ use ride\library\security\model\Role;
 class GenericRole implements Role {
 
     /**
-     * The id of the role
+     * Id of the role
      * @var string
      */
     protected $id;
 
     /**
-     * The name of the role
+     * Name of the role
      * @var string
      */
     protected $name;
 
     /**
-     * The allowed paths of the role
+     * Weight of this role towards other roles
+     * @var string
+     */
+    protected $weight;
+
+    /**
+     * Allowed paths of the role
      * @var array
      */
     protected $paths;
 
     /**
-     * The permissions of the role
+     * Granted permissions of the role
      * @var array
      */
     protected $permissions;
@@ -43,6 +49,7 @@ class GenericRole implements Role {
     public function __construct() {
         $this->id = null;
         $this->name = null;
+        $this->weight = 0;
         $this->paths = array();
         $this->permissions = array();
     }
@@ -91,6 +98,23 @@ class GenericRole implements Role {
      */
     public function getName() {
         return $this->name;
+    }
+
+    /**
+     * Sets the weight of this role
+     * @param integer $weight
+     * @return null
+     */
+    public function setWeight($weight) {
+        $this->weight = $weight;
+    }
+
+    /**
+     * Gets the weight of this role
+     * @return integer
+     */
+    public function getWeight() {
+        return $this->weight;
     }
 
     /**
