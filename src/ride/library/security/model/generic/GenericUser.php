@@ -356,16 +356,17 @@ class GenericUser implements User {
     /**
      * Checks whether a path is allowed for this user
      * @param string $path Path to check
+     * @param string $method Request method to check
      * @param \ride\library\security\matcher\PathMatcher $pathMatcher To match
      * path regular expression on the route
      * @return boolean True if the path is allowed, false otherwise
      */
-    public function isPathAllowed($path, PathMatcher $pathMatcher) {
+    public function isPathAllowed($path, $method, PathMatcher $pathMatcher) {
         if (!isset($this->paths)) {
             $this->preparePaths();
         }
 
-        if ($pathMatcher->matchPath($path, $this->paths)) {
+        if ($pathMatcher->matchPath($path, $method, $this->paths)) {
             return true;
         }
 
