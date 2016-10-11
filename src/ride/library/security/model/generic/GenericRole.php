@@ -163,7 +163,7 @@ class GenericRole implements Role {
         }
 
         foreach ($this->permissions as $permission) {
-            if ($permission->getPermissionCode() == $code) {
+            if ($permission->getCode() == $code) {
                 return true;
             }
         }
