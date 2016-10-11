@@ -348,7 +348,7 @@ class GenericUser implements User {
             $permissions = $role->getPermissions();
 
             foreach ($permissions as $permission) {
-                $this->permissions[$permission->code] = true;
+                $this->permissions[$permission->getCode()] = true;
             }
         }
     }

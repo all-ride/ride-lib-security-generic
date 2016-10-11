@@ -3,12 +3,11 @@
 namespace ride\library\security\model\generic\io;
 
 use ride\library\reflection\Boolean;
-use ride\library\system\file\File;
-
 use ride\library\security\model\generic\GenericPermission;
 use ride\library\security\model\generic\GenericRole;
 use ride\library\security\model\generic\GenericRoute;
 use ride\library\security\model\generic\GenericUser;
+use ride\library\system\file\File;
 
 use \DOMDocument;
 use \DOMElement;
@@ -216,7 +215,11 @@ class XmlSecurityModelIO implements SecurityModelIO {
         foreach ($this->roles as $role) {
             $permissions = $role->getPermissions();
             foreach ($permissions as $code => $permission) {
-                $permissions[$code] = $this->permissions[$code];
+                if (isset($this->permissions[$code])) {
+                    $permissions[$code] = $this->permissions[$code];
+                } else {
+                    unset($permissions[$code]);
+                }
             }
 
             $role->setPermissions($permissions);

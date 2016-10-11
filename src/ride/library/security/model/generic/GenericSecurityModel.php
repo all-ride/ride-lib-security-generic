@@ -210,6 +210,8 @@ class GenericSecurityModel implements ChainableSecurityModel {
             $this->users = $this->io->getUsers();
         }
 
+        $id = strtoupper($id);
+
         foreach ($this->users as $user) {
             if (strtoupper($user->getId()) == $id) {
                 return $user;
@@ -230,8 +232,10 @@ class GenericSecurityModel implements ChainableSecurityModel {
             $this->users = $this->io->getUsers();
         }
 
+        $username = strtoupper($username);
+
         foreach ($this->users as $user) {
-            if (strtoupper($user->getUserName()) == strtoupper($username)) {
+            if (strtoupper($user->getUserName()) == $username) {
                 return $user;
             }
         }
@@ -250,8 +254,10 @@ class GenericSecurityModel implements ChainableSecurityModel {
             $this->users = $this->io->getUsers();
         }
 
+        $email = strtoupper($email);
+
         foreach ($this->users as $user) {
-            if (strtoupper($user->getEmail()) == strtoupper($email)) {
+            if (strtoupper($user->getEmail()) == $email) {
                 return $user;
             }
         }
